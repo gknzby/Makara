@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="Makara.Views.DataMigratePage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    Title="Data Migration">
+    <!--  Main vertical layout for input and status  -->
+    <VerticalStackLayout
+        Padding="20"
+        HorizontalOptions="Center"
+        Spacing="10"
+        VerticalOptions="Center">
+        <!--  Horizontal layout for Entry and Button  -->
+        <HorizontalStackLayout HorizontalOptions="Center" Spacing="10">
+            <Entry
+                Placeholder="Enter file path"
+                Text="{Binding FolderPath}"
+                WidthRequest="250" />
+            <Button
+                Command="{Binding MigrateCommand}"
+                IsEnabled="{Binding IsNotProcessing}"
+                Text="Migrate" />
+        </HorizontalStackLayout>
+        <!--  Labels to display before/after counts  -->
+        <Label HorizontalOptions="Center" Text="Before Count:" />
+        <Label HorizontalOptions="Center" Text="{Binding BeforeCount}" />
+        <Label HorizontalOptions="Center" Text="After Count:" />
+        <Label HorizontalOptions="Center" Text="{Binding AfterCount}" />
+    </VerticalStackLayout>
+</ContentPage>

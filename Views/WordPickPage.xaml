@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="Makara.Views.WordPickPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:Makara.Helpers"
+    xmlns:vm="clr-namespace:Makara.ViewModels">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <local:StatusConverter x:Key="StatusConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <Grid Padding="10" ColumnDefinitions="*,*">
+        <!--  Left Column: Known Words  -->
+        <StackLayout Grid.Column="0">
+            <Label FontAttributes="Bold" Text="Known Words" />
+            <CollectionView ItemsSource="{Binding KnownWords}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <StackLayout Padding="5" Orientation="Horizontal">
+                            <Label Text="{Binding Word}" />
+                            <Label Margin="10,0,0,0" Text="{Binding Status, Converter={StaticResource StatusConverter}}" />
+                            <Button
+                                Margin="10,0,0,0"
+                                Command="{Binding Source={RelativeSource AncestorType={x:Type vm:WordPickViewModel}}, Path=MarkAsOtherCommand}"
+                                CommandParameter="{Binding .}"
+                                Text="Other" />
+                        </StackLayout>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </StackLayout>
+
+        <!--  Right Column: Other Words  -->
+        <StackLayout Grid.Column="1">
+            <Label FontAttributes="Bold" Text="Other Words" />
+            <CollectionView ItemsSource="{Binding OtherWords}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <StackLayout Padding="5" Orientation="Horizontal">
+                            <Label Text="{Binding Word}" />
+                            <Label Margin="10,0,0,0" Text="{Binding Status, Converter={StaticResource StatusConverter}}" />
+                            <Button
+                                Margin="10,0,0,0"
+                                Command="{Binding Source={RelativeSource AncestorType={x:Type vm:WordPickViewModel}}, Path=MarkAsKnownCommand}"
+                                CommandParameter="{Binding .}"
+                                Text="Mark Known" />
+                        </StackLayout>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </StackLayout>
+    </Grid>
+</ContentPage>
