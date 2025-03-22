@@ -5,7 +5,10 @@ public partial class AppShell : Shell
     {
         InitializeComponent();
         // Register routes for navigation
-        Routing.RegisterRoute("wordpick", typeof(Views.WordPickPage));
-        Routing.RegisterRoute("datamigrate", typeof(Views.DataMigratePage));
+        //Routing.RegisterRoute("wordpick", typeof(Views.WordPickPage));
+        //Routing.RegisterRoute("datamigrate", typeof(Views.DataMigratePage));
+
+
+        Routing.RegisterRoute("basepage", typeof(Views.BasePage));
     }
 }

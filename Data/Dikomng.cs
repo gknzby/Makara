@@ -1,8 +1,6 @@
-﻿using SQLite;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Makara.Models;
-using System.Runtime.ConstrainedExecution;
+﻿using Makara.Models;
+
+using SQLite;
 
 namespace Makara.Data
 {
@@ -20,7 +18,7 @@ namespace Makara.Data
 
         private async Task Init()
         {
-            if (_database != null)
+            if(_database != null)
                 return;
 
             _database = new SQLiteAsyncConnection(_dbPath);
@@ -34,23 +32,21 @@ namespace Makara.Data
             int result = 0;
             try
             {
-                // TODO: Call Init()
                 await Init();
 
                 // basic validation to ensure a name was entered
-                if (string.IsNullOrEmpty(ber))
+                if(string.IsNullOrEmpty(ber))
                     throw new Exception("Valid Ber required");
 
-                // TODO: Insert the new person into the database
+                // Create new Beriki with default string status (was previously StatusType enum)
                 result = await _database.InsertAsync(new Beriki { Ber = ber, Def = def });
 
                 StatusMessage = string.Format("{0} record(s) added (Name: {1})", result, ber);
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
                 StatusMessage = string.Format("Failed to add {0}. Error: {1}", ber, ex.Message);
             }
-
         }
 
         // Read
@@ -58,16 +54,15 @@ namespace Makara.Data
         {
             try
             {
-                // TODO: Call Init()
                 await Init();
 
                 // basic validation to ensure a name was entered
-                if (string.IsNullOrEmpty(ber))
+                if(string.IsNullOrEmpty(ber))
                     throw new Exception("Valid Ber required");
 
                 return await _database.Table<Beriki>().Where(b => b.Ber == ber).FirstOrDefaultAsync();
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
                 StatusMessage = string.Format("Failed to get {0}. Error: {1}", ber, ex.Message);
                 return null;
@@ -79,17 +74,33 @@ namespace Makara.Data
         {
             try
             {
-                // TODO: Call Init()
                 await Init();
 
                 return await _database.Table<Beriki>().ToListAsync();
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
                 StatusMessage = string.Format("Failed to get {0}. Error: {1}", "any beriki", ex.Message);
                 return null;
             }
-            
+        }
+
+        // Filter by Status
+        public async Task<List<Beriki>> GetBerikisByStatusAsync(string status)
+        {
+            try
+            {
+                await Init();
+
+                return await _database.Table<Beriki>()
+                    .Where(b => b.Status == status)
+                    .ToListAsync();
+            }
+            catch(Exception ex)
+            {
+                StatusMessage = string.Format("Failed to get berikis by status. Error: {0}", ex.Message);
+                return null;
+            }
         }
 
         // Update
@@ -97,20 +108,19 @@ namespace Makara.Data
         {
             try
             {
-                // TODO: Call Init()
                 await Init();
 
                 // basic validation to ensure a name was entered
-                if (beriki == null)
+                if(beriki == null)
                     throw new Exception("Valid Beriki required");
 
                 return await _database.UpdateAsync(beriki);
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
                 StatusMessage = string.Format("Failed to update {0}. Error: {1}", "the beriki", ex.Message);
                 return -1;
-            }            
+            }
         }
 
         // Delete
@@ -118,21 +128,40 @@ namespace Makara.Data
         {
             try
             {
-                // TODO: Call Init()
                 await Init();
 
                 // basic validation to ensure a name was entered
-                if (beriki == null)
+                if(beriki == null)
                     throw new Exception("Valid Beriki required");
 
                 return await _database.DeleteAsync(beriki);
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
                 StatusMessage = string.Format("Failed to delete {0}. Error: {1}", "the beriki", ex.Message);
                 return -1;
             }
+        }
 
+        // Set Status
+        public async Task<int> SetBerikiStatusAsync(string ber, string status)
+        {
+            try
+            {
+                await Init();
+
+                var beriki = await GetBerikiAsync(ber);
+                if(beriki == null)
+                    throw new Exception("Beriki not found");
+
+                beriki.Status = status;
+                return await UpdateBerikiAsync(beriki);
+            }
+            catch(Exception ex)
+            {
+                StatusMessage = string.Format("Failed to update status. Error: {0}", ex.Message);
+                return -1;
+            }
         }
     }
 }

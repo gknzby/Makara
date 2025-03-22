@@ -1,20 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿// No changes needed in DataMigrateViewModel.cs
+// It interacts with WordModel only through the WordPickDatabase abstraction
+// which handles the struct-specific logic internally
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+
 using Makara.Data;
 using Makara.Helpers;
-using System.IO;
 
 namespace Makara.ViewModels
 {
     public partial class DataMigrateViewModel : ObservableObject
     {
         private readonly WordPickDatabase _database;
-        
+
         public DataMigrateViewModel(WordPickDatabase database)
         {
             _database = database;
@@ -51,7 +49,7 @@ namespace Makara.ViewModels
                 BeforeCount = _database.GetAllWords().Count;
 
                 // Verify file existence.
-                if (!File.Exists(FolderPath))
+                if(!File.Exists(FolderPath))
                 {
                     // Optionally show an error or simply exit.
                     return;
@@ -59,7 +57,7 @@ namespace Makara.ViewModels
 
                 // Read file content.
                 string text = await File.ReadAllTextAsync(FolderPath);
-                if (string.IsNullOrWhiteSpace(text))
+                if(string.IsNullOrWhiteSpace(text))
                 {
                     // Fill empty file with default content.
                     text = "default content";

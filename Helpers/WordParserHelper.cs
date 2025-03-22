@@ -1,7 +1,9 @@
 // File: Helpers/WordParserHelper.cs
+// No changes needed as the code works the same with a class
 using System.Text.RegularExpressions;
-using Makara.Models;
+
 using Makara.Data;
+using Makara.Models;
 
 namespace Makara.Helpers
 {
@@ -15,14 +17,14 @@ namespace Makara.Helpers
         /// <param name="database">The target database instance. If null, a new instance is created.</param>
         public static void ParseAndAddWords(string text, WordPickDatabase? database = null)
         {
-            if (string.IsNullOrWhiteSpace(text))
+            if(string.IsNullOrWhiteSpace(text))
                 return;
-            
+
             // Regex to match sequences of Unicode letters.
             var matches = Regex.Matches(text, @"\p{L}+");
             database ??= new WordPickDatabase();
-            
-            foreach (Match match in matches)
+
+            foreach(Match match in matches)
             {
                 string wordStr = match.Value;
                 // Create a WordModel using the parsed word. Status defaults to Unspecified.

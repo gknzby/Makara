@@ -7,24 +7,24 @@ public static class MauiProgram
 {
     public static MauiApp CreateMauiApp()
     {
-        var builder = MauiApp.CreateBuilder();
-        builder
+        MauiAppBuilder _builder = MauiApp.CreateBuilder();
+        _builder
             .UseMauiApp<App>()
             .ConfigureFonts(fonts =>
             {
                 fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                 fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
             });
-        
-        // Register services for DI
-        builder.Services.AddSingleton<WordPickDatabase>();
-        builder.Services.AddTransient<WordPickViewModel>();
-        builder.Services.AddTransient<DataMigrateViewModel>(); // Register DataMigrateViewModel
+
+        //// Register services for DI
+        //builder.Services.AddSingleton<WordPickDatabase>();
+        //builder.Services.AddTransient<WordPickViewModel>();
+        //builder.Services.AddTransient<DataMigrateViewModel>(); // Register DataMigrateViewModel
 
 #if DEBUG
-        builder.Logging.AddDebug();
+        _builder.Logging.AddDebug();
 #endif
 
-        return builder.Build();
+        return _builder.Build();
     }
 }

@@ -1,5 +1,4 @@
-﻿
-namespace Makara.Helpers
+﻿namespace Makara.Helpers
 {
     public class FileAccessHelper
     {

@@ -7,18 +7,19 @@
     Title="Makara"
     Shell.FlyoutBehavior="Flyout">
 
-    <!--  Changed to use a TabBar for multiple pages  -->
+
     <TabBar>
-        <!--  Word Pick Page  -->
-        <ShellContent
+        <!--<ShellContent
             Title="Word Pick"
             ContentTemplate="{DataTemplate view:WordPickPage}"
             Route="wordpick" />
-        <!--  Data Migrate Page  -->
         <ShellContent
             Title="Data Migration"
             ContentTemplate="{DataTemplate view:DataMigratePage}"
-            Route="datamigrate" />
+            Route="datamigrate" />-->
+        <ShellContent
+            Title="Base"
+            ContentTemplate="{DataTemplate view:BasePage}"
+            Route="basepage" />
     </TabBar>
-
 </Shell>
