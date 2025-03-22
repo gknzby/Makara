@@ -24,4 +24,17 @@ public partial class ItemsPage : ContentPage
             System.Diagnostics.Debug.WriteLine($"Error in Button_Clicked: {ex}");
         }
     }
+
+    protected override void OnAppearing()
+    {
+        base.OnAppearing();
+
+        // Force the collection view to update and trigger layout
+        var collectionView = this.FindByName<CollectionView>("itemsCollection");
+        if(collectionView != null)
+        {
+            collectionView.ItemsSource = null;
+            collectionView.ItemsSource = BindingContext is ItemsViewModel viewModel ? viewModel.Items : null;
+        }
+    }
 }

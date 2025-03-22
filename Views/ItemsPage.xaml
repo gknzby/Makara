@@ -4,139 +4,278 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:behaviors="clr-namespace:Makara.Behaviors.List"
-    xmlns:models="clr-namespace:Makara.Models"
     xmlns:viewmodels="clr-namespace:Makara.ViewModels"
     Title="Items"
     BackgroundColor="White">
 
+    <Grid BackgroundColor="White" RowDefinitions="Auto,*">
+        <Label
+            Grid.Row="0"
+            Margin="10"
+            FontSize="16"
+            HorizontalOptions="Center"
+            Text="{Binding Items.Count, StringFormat='Items Count: {0}'}" />
+
+        <CollectionView
+            x:Name="ItemsCollectionView"
+            Grid.Row="1"
+            Margin="5"
+            BackgroundColor="LightGray"
+            ItemsSource="{Binding Items}"
+            VerticalOptions="FillAndExpand">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Frame
+                        Margin="5"
+                        Padding="10"
+                        BorderColor="Gray"
+                        CornerRadius="5"
+                        HasShadow="True">
+                        <Grid
+                            behaviors:ButtonCommandMapper.AutoWireButtons="True"
+                            behaviors:ButtonCommandMapper.Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:ItemsViewModel}}, Path=ItemActionCommand}"
+                            BackgroundColor="White"
+                            ColumnDefinitions="*, Auto, Auto, Auto, Auto">
+
+                            <!--  Item content  -->
+                            <Label
+                                FontAttributes="Bold"
+                                FontSize="18"
+                                Text="{Binding Name}"
+                                TextColor="Black"
+                                VerticalOptions="Center" />
+
+                            <!--  Buttons - no need for command bindings, they use ClassId  -->
+                            <Button
+                                Grid.Column="1"
+                                Margin="2"
+                                ClassId="Edit"
+                                Text="Edit" />
+                            <Button
+                                Grid.Column="2"
+                                Margin="2"
+                                ClassId="Delete"
+                                Text="Delete" />
+                            <Button
+                                Grid.Column="3"
+                                Margin="2"
+                                ClassId="Share"
+                                Text="Share" />
+                            <Button
+                                Grid.Column="4"
+                                Margin="2"
+                                ClassId="ViewDetails"
+                                Text="Details" />
+                        </Grid>
+                    </Frame>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+
+            <CollectionView.EmptyView>
+                <StackLayout HorizontalOptions="Center" VerticalOptions="Center">
+                    <Label
+                        FontSize="18"
+                        HorizontalTextAlignment="Center"
+                        Text="No items available" />
+                </StackLayout>
+            </CollectionView.EmptyView>
+        </CollectionView>
+    </Grid>
+</ContentPage>
+
+
+
+<!--<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="Makara.Views.ItemsPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:behaviors="clr-namespace:Makara.Behaviors.List"
+    xmlns:models="clr-namespace:Makara.Models"
+    xmlns:viewmodels="clr-namespace:Makara.ViewModels"
+    Title="Items"
+    BackgroundColor="Black">
+
+
     <ContentPage.Resources>
-        <!--  Style to apply to row items  -->
-        <Style x:Key="ItemFrameStyle" TargetType="Frame">
-            <Setter Property="Padding" Value="10" />
-            <Setter Property="Margin" Value="0,4" />
-            <Setter Property="BackgroundColor" Value="#f8f8f8" />
-            <Setter Property="BorderColor" Value="#dddddd" />
-            <Setter Property="CornerRadius" Value="5" />
-            <Setter Property="HasShadow" Value="True" />
+-->
+<!--  Reusable styles for performance optimization  -->
+<!--
+        <Style x:Key="HeaderLabelStyle" TargetType="Label">
+            <Setter Property="FontAttributes" Value="Bold" />
+            <Setter Property="Margin" Value="0,0,0,5" />
+        </Style>
+
+        <Style x:Key="WordLabelStyle" TargetType="Label">
+            <Setter Property="VerticalOptions" Value="Center" />
+            <Setter Property="LineBreakMode" Value="TailTruncation" />
+            <Setter Property="MaxLines" Value="1" />
+            <Setter Property="WidthRequest" Value="120" />
+        </Style>
+
+        <Style x:Key="StatusLabelStyle" TargetType="Label">
+            <Setter Property="VerticalOptions" Value="Center" />
+            <Setter Property="Margin" Value="4,0,0,0" />
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="LineBreakMode" Value="TailTruncation" />
+            <Setter Property="MaxLines" Value="1" />
+            <Setter Property="WidthRequest" Value="80" />
+        </Style>
+
+-->
+<!--  Small button style for the status buttons  -->
+<!--
+        <Style x:Key="StatusButtonStyle" TargetType="Button">
+            <Setter Property="VerticalOptions" Value="Center" />
+            <Setter Property="Margin" Value="2,0,2,0" />
+            <Setter Property="WidthRequest" Value="40" />
+            <Setter Property="HeightRequest" Value="30" />
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="Padding" Value="2" />
+        </Style>
+
+        <Style x:Key="CountLabelStyle" TargetType="Label">
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="TextColor" Value="Gray" />
+            <Setter Property="Margin" Value="5,0,0,5" />
+            <Setter Property="VerticalOptions" Value="Center" />
         </Style>
     </ContentPage.Resources>
 
-    <Grid
-        Padding="12"
-        RowDefinitions="Auto,*"
-        RowSpacing="8">
-
-        <!--  Header with item count  -->
-        <Frame
-            Grid.Row="0"
-            Padding="10"
-            BackgroundColor="#f0f0f0"
-            CornerRadius="6"
-            HorizontalOptions="FillAndExpand">
-            <Label
-                FontAttributes="Bold"
-                FontSize="18"
-                HorizontalOptions="Center"
-                Text="{Binding Items.Count, StringFormat='Items Count: {0}'}"
-                TextColor="Black"
-                VerticalOptions="Center" />
-        </Frame>
-
-        <!--  Items list with fixed height and scroll capability  -->
-        <ScrollView
-            Grid.Row="1"
-            HorizontalOptions="FillAndExpand"
-            VerticalOptions="FillAndExpand">
-
+-->
+<!--  To ensure proper layout on all platforms  -->
+<!--
+    <Grid Padding="10">
+        <VerticalStackLayout>
+            <Label Style="{StaticResource HeaderLabelStyle}" Text="{Binding Items.Count, StringFormat='Items Count: {0}'}" />
             <CollectionView
-                HorizontalOptions="FillAndExpand"
-                ItemsSource="{Binding Items}"
-                SelectionMode="None"
-                VerticalOptions="FillAndExpand">
+                EmptyView="No items bro"
+                HeightRequest="600"
+                ItemsSource="{Binding Items}">
                 <CollectionView.ItemsLayout>
-                    <LinearItemsLayout ItemSpacing="6" Orientation="Vertical" />
+                    <LinearItemsLayout ItemSpacing="2" Orientation="Vertical" />
                 </CollectionView.ItemsLayout>
-
                 <CollectionView.ItemTemplate>
-                    <DataTemplate x:DataType="models:ItemModel">
-                        <Frame Style="{StaticResource ItemFrameStyle}">
-                            <Grid ColumnDefinitions="*, Auto, Auto, Auto, Auto" ColumnSpacing="8">
-                                <Grid.Behaviors>
-                                    <!--  Attach the behavior  -->
-                                    <behaviors:ListItemActionBehavior Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:ItemsViewModel}}, Path=ItemActionCommand}" Item="{Binding .}" />
-                                </Grid.Behaviors>
-
-                                <!--  Item name with explicit text color  -->
-                                <Label
-                                    Grid.Column="0"
-                                    FontSize="16"
-                                    LineBreakMode="TailTruncation"
-                                    Text="{Binding Name}"
-                                    TextColor="Black"
-                                    VerticalOptions="Center" />
-
-                                <!--  Action buttons with explicit styling  -->
-                                <Button
-                                    Grid.Column="1"
-                                    Padding="8,0"
-                                    BackgroundColor="#4CAF50"
-                                    ClassId="Edit"
-                                    CornerRadius="4"
-                                    HeightRequest="40"
-                                    Text="Edit"
-                                    TextColor="White" />
-
-                                <Button
-                                    Grid.Column="2"
-                                    Padding="8,0"
-                                    BackgroundColor="#F44336"
-                                    ClassId="Delete"
-                                    CornerRadius="4"
-                                    HeightRequest="40"
-                                    Text="Delete"
-                                    TextColor="White" />
-
-                                <Button
-                                    Grid.Column="3"
-                                    Padding="8,0"
-                                    BackgroundColor="#2196F3"
-                                    ClassId="Share"
-                                    CornerRadius="4"
-                                    HeightRequest="40"
-                                    Text="Share"
-                                    TextColor="White" />
-
-                                <Button
-                                    Grid.Column="4"
-                                    Padding="8,0"
-                                    BackgroundColor="#9C27B0"
-                                    ClassId="ViewDetails"
-                                    CornerRadius="4"
-                                    HeightRequest="40"
-                                    Text="Details"
-                                    TextColor="White" />
-                            </Grid>
-                        </Frame>
+                    <DataTemplate>
+                        <Grid HeightRequest="40" WidthRequest="450">
+                            <Grid.Behaviors>
+                                <behaviors:ListItemActionBehavior Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:ItemsViewModel}}, Path=ItemActionCommand}" Item="{Binding .}" />
+                            </Grid.Behaviors>
+                            <Frame
+                                Padding="6"
+                                BackgroundColor="DimGray"
+                                BorderColor="DarkGrey"
+                                CornerRadius="5"
+                                HasShadow="False">
+                                <HorizontalStackLayout Spacing="0">
+                                    <Label Style="{StaticResource WordLabelStyle}" Text="{Binding Name}" />
+                                    <Button
+                                        ClassId="Edit"
+                                        Style="{StaticResource StatusButtonStyle}"
+                                        Text="Edit" />
+                                </HorizontalStackLayout>
+                            </Frame>
+                        </Grid>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
-
-                <CollectionView.EmptyView>
-                    <VerticalStackLayout
-                        HorizontalOptions="Center"
-                        Spacing="12"
-                        VerticalOptions="Center">
-                        <Label
-                            FontSize="18"
-                            HorizontalTextAlignment="Center"
-                            Text="No items available"
-                            TextColor="#555555" />
-                        <Button
-                            Command="{Binding RefreshCommand}"
-                            HorizontalOptions="Center"
-                            Text="Refresh" />
-                    </VerticalStackLayout>
-                </CollectionView.EmptyView>
             </CollectionView>
-        </ScrollView>
-    </Grid>
-</ContentPage>
+        </VerticalStackLayout>
+    </Grid>-->
+
+
+
+<!--<ContentPage.Content>
+        <RefreshView>
+            <Grid BackgroundColor="White" RowDefinitions="Auto,*">
+-->
+<!--  Debug label to show items count  -->
+
+<!--  CollectionView with fixed height to ensure visibility  -->
+<!--
+                <CollectionView
+                    Grid.Row="1"
+                    Margin="5"
+                    BackgroundColor="LightGray"
+                    HeightRequest="600"
+                    ItemsSource="{Binding Items}"
+                    SelectionMode="None"
+                    VerticalOptions="FillAndExpand">
+                    <CollectionView.ItemsLayout>
+                        <LinearItemsLayout ItemSpacing="5" Orientation="Vertical" />
+                    </CollectionView.ItemsLayout>
+
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="models:ItemModel">
+-->
+<!--  Make each item more visible with a border and padding  -->
+<!--
+                            <Frame
+                                Margin="5"
+                                Padding="10"
+                                BorderColor="Gray"
+                                CornerRadius="5"
+                                HasShadow="True">
+                                <Grid BackgroundColor="White" ColumnDefinitions="*, Auto, Auto, Auto, Auto">
+
+                                    <Grid.Behaviors>
+-->
+<!--  Attach behavior to the Grid properly  -->
+<!--
+                                        <behaviors:ListItemActionBehavior Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:ItemsViewModel}}, Path=ItemActionCommand}" Item="{Binding .}" />
+                                    </Grid.Behaviors>
+
+-->
+<!--  Make text more visible  -->
+<!--
+                                    <Label
+                                        FontAttributes="Bold"
+                                        FontSize="18"
+                                        Text="{Binding Name}"
+                                        TextColor="Black"
+                                        VerticalOptions="Center" />
+
+-->
+<!--  Buttons with visual distinction  -->
+<!--
+                                    <Button
+                                        Grid.Column="1"
+                                        Margin="2"
+                                        ClassId="Edit"
+                                        Text="Edit" />
+                                    <Button
+                                        Grid.Column="2"
+                                        Margin="2"
+                                        ClassId="Delete"
+                                        Text="Delete" />
+                                    <Button
+                                        Grid.Column="3"
+                                        Margin="2"
+                                        ClassId="Share"
+                                        Text="Share" />
+                                    <Button
+                                        Grid.Column="4"
+                                        Margin="2"
+                                        ClassId="ViewDetails"
+                                        Text="Details" />
+                                </Grid>
+                            </Frame>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+
+-->
+<!--  Add visual empty state  -->
+<!--
+                    <CollectionView.EmptyView>
+                        <StackLayout HorizontalOptions="Center" VerticalOptions="Center">
+                            <Label
+                                FontSize="18"
+                                HorizontalTextAlignment="Center"
+                                Text="No items available" />
+                        </StackLayout>
+                    </CollectionView.EmptyView>
+                </CollectionView>
+            </Grid>
+        </RefreshView>
+    </ContentPage.Content>-->
+<!--
+</ContentPage>-->
