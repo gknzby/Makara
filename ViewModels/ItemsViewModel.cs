@@ -16,7 +16,7 @@ public partial class ItemsViewModel : ObservableObject
     /// <summary>
     /// Collection of items to display
     /// </summary>
-    public ObservableCollection<ItemModel> Items { get; } = new();
+    public ObservableCollection<ItemModel> Items { get; }
 
     /// <summary>
     /// Command that handles all item actions
@@ -28,10 +28,8 @@ public partial class ItemsViewModel : ObservableObject
     /// </summary>
     public ItemsViewModel()
     {
-        // Single command handles all actions
+        Items = new ObservableCollection<ItemModel>();
         ItemActionCommand = new Command<ActionParameter>(ExecuteItemAction);
-
-        // Load sample items
         LoadSampleItems();
     }
 

@@ -4,88 +4,139 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:behaviors="clr-namespace:Makara.Behaviors.List"
+    xmlns:models="clr-namespace:Makara.Models"
     xmlns:viewmodels="clr-namespace:Makara.ViewModels"
     Title="Items"
     BackgroundColor="White">
 
-    <!--  Grid with explicit row definitions  -->
-    <Grid BackgroundColor="White" RowDefinitions="Auto,*">
-        <!--  Debug label to show items count  -->
-        <Label
+    <ContentPage.Resources>
+        <!--  Style to apply to row items  -->
+        <Style x:Key="ItemFrameStyle" TargetType="Frame">
+            <Setter Property="Padding" Value="10" />
+            <Setter Property="Margin" Value="0,4" />
+            <Setter Property="BackgroundColor" Value="#f8f8f8" />
+            <Setter Property="BorderColor" Value="#dddddd" />
+            <Setter Property="CornerRadius" Value="5" />
+            <Setter Property="HasShadow" Value="True" />
+        </Style>
+    </ContentPage.Resources>
+
+    <Grid
+        Padding="12"
+        RowDefinitions="Auto,*"
+        RowSpacing="8">
+
+        <!--  Header with item count  -->
+        <Frame
             Grid.Row="0"
-            Margin="10"
-            FontSize="16"
-            HorizontalOptions="Center"
-            Text="{Binding Items.Count, StringFormat='Items Count: {0}'}" />
+            Padding="10"
+            BackgroundColor="#f0f0f0"
+            CornerRadius="6"
+            HorizontalOptions="FillAndExpand">
+            <Label
+                FontAttributes="Bold"
+                FontSize="18"
+                HorizontalOptions="Center"
+                Text="{Binding Items.Count, StringFormat='Items Count: {0}'}"
+                TextColor="Black"
+                VerticalOptions="Center" />
+        </Frame>
 
-        <!--  CollectionView in row 1 (*) which will expand to fill available space  -->
-        <CollectionView
+        <!--  Items list with fixed height and scroll capability  -->
+        <ScrollView
             Grid.Row="1"
-            Margin="5"
-            BackgroundColor="LightGray"
-            ItemsSource="{Binding Items}"
+            HorizontalOptions="FillAndExpand"
             VerticalOptions="FillAndExpand">
-            <CollectionView.ItemTemplate>
-                <DataTemplate>
-                    <!--  Make each item more visible with a border and padding  -->
-                    <Frame
-                        Margin="5"
-                        Padding="10"
-                        BorderColor="Gray"
-                        CornerRadius="5"
-                        HasShadow="True">
-                        <Grid BackgroundColor="White" ColumnDefinitions="*, Auto, Auto, Auto, Auto">
 
-                            <Grid.Behaviors>
-                                <!--  Attach behavior to the Grid  -->
-                                <behaviors:ListItemActionBehavior Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:ItemsViewModel}}, Path=ItemActionCommand}" Item="{Binding .}" />
-                            </Grid.Behaviors>
-                            <!--  Attach behavior to the Grid  -->
+            <CollectionView
+                HorizontalOptions="FillAndExpand"
+                ItemsSource="{Binding Items}"
+                SelectionMode="None"
+                VerticalOptions="FillAndExpand">
+                <CollectionView.ItemsLayout>
+                    <LinearItemsLayout ItemSpacing="6" Orientation="Vertical" />
+                </CollectionView.ItemsLayout>
 
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="models:ItemModel">
+                        <Frame Style="{StaticResource ItemFrameStyle}">
+                            <Grid ColumnDefinitions="*, Auto, Auto, Auto, Auto" ColumnSpacing="8">
+                                <Grid.Behaviors>
+                                    <!--  Attach the behavior  -->
+                                    <behaviors:ListItemActionBehavior Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:ItemsViewModel}}, Path=ItemActionCommand}" Item="{Binding .}" />
+                                </Grid.Behaviors>
 
-                            <!--  Make text more visible  -->
-                            <Label
-                                FontAttributes="Bold"
-                                FontSize="18"
-                                Text="{Binding Name}"
-                                TextColor="Black"
-                                VerticalOptions="Center" />
+                                <!--  Item name with explicit text color  -->
+                                <Label
+                                    Grid.Column="0"
+                                    FontSize="16"
+                                    LineBreakMode="TailTruncation"
+                                    Text="{Binding Name}"
+                                    TextColor="Black"
+                                    VerticalOptions="Center" />
 
-                            <!--  Buttons with visual distinction  -->
-                            <Button
-                                Grid.Column="1"
-                                Margin="2"
-                                ClassId="Edit"
-                                Text="Edit" />
-                            <Button
-                                Grid.Column="2"
-                                Margin="2"
-                                ClassId="Delete"
-                                Text="Delete" />
-                            <Button
-                                Grid.Column="3"
-                                Margin="2"
-                                ClassId="Share"
-                                Text="Share" />
-                            <Button
-                                Grid.Column="4"
-                                Margin="2"
-                                ClassId="ViewDetails"
-                                Text="Details" />
-                        </Grid>
-                    </Frame>
-                </DataTemplate>
-            </CollectionView.ItemTemplate>
+                                <!--  Action buttons with explicit styling  -->
+                                <Button
+                                    Grid.Column="1"
+                                    Padding="8,0"
+                                    BackgroundColor="#4CAF50"
+                                    ClassId="Edit"
+                                    CornerRadius="4"
+                                    HeightRequest="40"
+                                    Text="Edit"
+                                    TextColor="White" />
 
-            <!--  Add visual empty state  -->
-            <CollectionView.EmptyView>
-                <StackLayout HorizontalOptions="Center" VerticalOptions="Center">
-                    <Label
-                        FontSize="18"
-                        HorizontalTextAlignment="Center"
-                        Text="No items available" />
-                </StackLayout>
-            </CollectionView.EmptyView>
-        </CollectionView>
+                                <Button
+                                    Grid.Column="2"
+                                    Padding="8,0"
+                                    BackgroundColor="#F44336"
+                                    ClassId="Delete"
+                                    CornerRadius="4"
+                                    HeightRequest="40"
+                                    Text="Delete"
+                                    TextColor="White" />
+
+                                <Button
+                                    Grid.Column="3"
+                                    Padding="8,0"
+                                    BackgroundColor="#2196F3"
+                                    ClassId="Share"
+                                    CornerRadius="4"
+                                    HeightRequest="40"
+                                    Text="Share"
+                                    TextColor="White" />
+
+                                <Button
+                                    Grid.Column="4"
+                                    Padding="8,0"
+                                    BackgroundColor="#9C27B0"
+                                    ClassId="ViewDetails"
+                                    CornerRadius="4"
+                                    HeightRequest="40"
+                                    Text="Details"
+                                    TextColor="White" />
+                            </Grid>
+                        </Frame>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+
+                <CollectionView.EmptyView>
+                    <VerticalStackLayout
+                        HorizontalOptions="Center"
+                        Spacing="12"
+                        VerticalOptions="Center">
+                        <Label
+                            FontSize="18"
+                            HorizontalTextAlignment="Center"
+                            Text="No items available"
+                            TextColor="#555555" />
+                        <Button
+                            Command="{Binding RefreshCommand}"
+                            HorizontalOptions="Center"
+                            Text="Refresh" />
+                    </VerticalStackLayout>
+                </CollectionView.EmptyView>
+            </CollectionView>
+        </ScrollView>
     </Grid>
 </ContentPage>
