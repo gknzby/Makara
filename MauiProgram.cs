@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using Makara.Data;
 using Makara.ViewModels;
+using Makara.Views;
 
 namespace Makara;
 public static class MauiProgram
@@ -19,7 +20,13 @@ public static class MauiProgram
         //// Register services for DI
         //builder.Services.AddSingleton<WordPickDatabase>();
         //builder.Services.AddTransient<WordPickViewModel>();
-        //builder.Services.AddTransient<DataMigrateViewModel>(); // Register DataMigrateViewModel
+        //builder.Services.AddTransient<DataMigrateViewModel>();
+
+        // Register only the behavior manager service
+        _builder.Services.AddSingleton<IBehaviorManager, BehaviorManager>();
+
+        // Register view models
+        _builder.Services.AddSingleton<ItemsViewModel>();
 
 #if DEBUG
         _builder.Logging.AddDebug();

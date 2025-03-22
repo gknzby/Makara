@@ -19,7 +19,7 @@
             Route="datamigrate" />-->
         <ShellContent
             Title="Base"
-            ContentTemplate="{DataTemplate view:BasePage}"
-            Route="basepage" />
+            ContentTemplate="{DataTemplate view:ItemsPage}"
+            Route="itemspage" />
     </TabBar>
 </Shell>

@@ -9,6 +9,6 @@ public partial class AppShell : Shell
         //Routing.RegisterRoute("datamigrate", typeof(Views.DataMigratePage));
 
 
-        Routing.RegisterRoute("basepage", typeof(Views.BasePage));
+        Routing.RegisterRoute("itemspage", typeof(Views.ItemsPage));
     }
 }
